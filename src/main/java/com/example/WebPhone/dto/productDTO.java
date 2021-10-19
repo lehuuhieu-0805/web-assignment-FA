@@ -10,5 +10,4 @@ public class productDTO {
     private String UnitInStock;
     private String Description;
     private String Condition;
-    private int ddd;
 }
