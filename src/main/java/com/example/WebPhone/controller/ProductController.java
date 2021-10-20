@@ -30,25 +30,31 @@ public class ProductController {
         return "index";
     }
 
+//    @PostMapping("/product")
+//    public String productAddPost(@RequestParam("productImage")MultipartFile file,
+//                                 @RequestParam("image")String image) throws IOException {
+//        Product product = new Product();
+//        product.setId(product.getId());
+//        product.setName(product.getName());
+//        String imageUUID;
+//        if (!file.isEmpty()) {
+//            imageUUID = file.getOriginalFilename();
+//            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
+//            Files.write(fileNameAndPath, file.getBytes());
+//        } else {
+//            imageUUID = image;
+//        }
+//        product.setImage(imageUUID);
+//        product.setQuantity(product.getQuantity());
+//        product.setPrice(product.getPrice());
+//        product.setDescription(product.getDescription());
+//        System.out.println(product.getName());
+//        IProductService.save(product);
+//        return "index";
+//    }
+
     @PostMapping("/product")
-    public String productAddPost(@RequestParam("productImage")MultipartFile file,
-                                 @RequestParam("image")String image) throws IOException {
-        Product product = new Product();
-        product.setId(product.getId());
-        product.setName(product.getName());
-        String imageUUID;
-        if (!file.isEmpty()) {
-            imageUUID = file.getOriginalFilename();
-            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
-            Files.write(fileNameAndPath, file.getBytes());
-        } else {
-            imageUUID = image;
-        }
-        product.setImage(imageUUID);
-        product.setQuantity(product.getQuantity());
-        product.setPrice(product.getPrice());
-        product.setDescription(product.getDescription());
-        System.out.println(product.getName());
+    public String AddProduct(@ModelAttribute("product") Product product) {
         IProductService.save(product);
         return "index";
     }
