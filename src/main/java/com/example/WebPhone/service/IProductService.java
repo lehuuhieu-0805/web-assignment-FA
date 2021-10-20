@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface IProductService {
     public List<Product> findAll();
-    public Product save(Product product);
+    public void save(Product product);
 }

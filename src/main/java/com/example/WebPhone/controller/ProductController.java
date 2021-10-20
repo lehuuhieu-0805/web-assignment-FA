@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,14 +21,15 @@ import java.util.List;
 
 @Controller
 public class ProductController {
-    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/img";
+//    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/img";
     @Autowired
     IProductService IProductService;
 
-    @GetMapping("/product")
+    @GetMapping(value = {"/", "/product"})
     public String Products(Model model){
         List<Product> listProduct = IProductService.findAll();
         model.addAttribute("list", listProduct);
+        model.addAttribute("product", new Product());
         return "index";
     }
 
@@ -54,8 +57,8 @@ public class ProductController {
 //    }
 
     @PostMapping("/product")
-    public String AddProduct(@ModelAttribute("product") Product product) {
+    public String AddProduct(@ModelAttribute Product product) {
         IProductService.save(product);
-        return "index";
+        return "redirect:/";
     }
 }
