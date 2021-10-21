@@ -28,10 +28,7 @@
                     <tr th:each="dto: ${list}">
                         <th scope="row" th:text="${dtoStat.index + 1}"></th>
                         <td th:text="${dto.name}" />
-<!--                        <td th:text="${dto.image}"/>-->
-                        <td>
-                            <img src="https://s3.ap-southeast-1.amazonaws.com/cdn.image/images/suzy/5.jpg" width="100px"/>
-                        </td>
+                        <td><img height="100px" width="100px"  th:src="@{${'/img/' + dto.image}}"></td>
                         <td th:text="${dto.description}"/>
                         <td th:text="${dto.price}"/>
                         <td th:text="${dto.quantity}"/>
@@ -53,30 +50,30 @@
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <form th:action="@{/product}" th:object="${product}" method="POST">
+                                <form th:action="@{/product}" th:object="${product}" method="POST" enctype="multipart/form-data">
                                     <div class="modal-body">
 
                                             <div class="form-group">
                                                 <label class="col-form-label">Product Name:</label>
-                                                <input type="text" class="form-control" th:field="*{name}" >
+                                                <input type="text" class="form-control" th:field="*{name}" id="name" name="name"/>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">Image:</label>
                                                 <br>
-                                                <input type="file"   accept="image/jpeg, image/png" />
-
+                                                <input type="file" name="productImage" accept="image/jpeg, image/png"  id="productImage" />
+                                                <input type="hidden" name="image" th:value="${product.image}">
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">Description:</label>
-                                                <input type="text" class="form-control" th:field="*{description}"  />
+                                                <input type="text" class="form-control" th:field="*{description}" id="description" name="description"/>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">Price:</label>
-                                                <input type="text" class="form-control" th:field="*{price}" />
+                                                <input type="text" class="form-control" th:field="*{price}" id="price" name="price"/>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-form-label">Quantity:</label>
-                                                <input type="text" class="form-control" th:field="*{quantity}"  />
+                                                <input type="text" class="form-control" th:field="*{quantity}" id="quantity" name="quantity"/>
                                             </div>
 
                                     </div>
