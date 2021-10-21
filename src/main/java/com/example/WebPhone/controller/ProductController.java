@@ -57,10 +57,10 @@ public class ProductController {
         IProductService.save(product);
         return "redirect:/";
     }
+    @GetMapping("/product/delete/{id}")
+    public String deleteProduct(@PathVariable int id){
+        IProductService.remove(id);
+        return "redirect:/";
+    }
 
-//    @PostMapping("/product")
-//    public String AddProduct(@ModelAttribute Product product) {
-//        IProductService.save(product);
-//        return "redirect:/";
-//    }
 }

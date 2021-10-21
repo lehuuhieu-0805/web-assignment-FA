@@ -33,7 +33,7 @@
                         <td th:text="${dto.price}"/>
                         <td th:text="${dto.quantity}"/>
                         <td>
-                            <a href="#" class="btn btn-danger">Delete</a>
+                            <a th:href="@{/product/delete/{id}(id=${dto.id})}" class="btn btn-danger">Delete</a>
                             <a href="#" class="btn btn-info" data-toggle="modal" data-target="#update">Update</a>
                         </td>
                     </tr>
