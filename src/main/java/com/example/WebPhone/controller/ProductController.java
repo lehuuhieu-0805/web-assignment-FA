@@ -21,7 +21,7 @@ import java.util.List;
 
 @Controller
 public class ProductController {
-//    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/img";
+    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/img";
     @Autowired
     IProductService IProductService;
 
@@ -33,32 +33,34 @@ public class ProductController {
         return "index";
     }
 
-//    @PostMapping("/product")
-//    public String productAddPost(@RequestParam("productImage")MultipartFile file,
-//                                 @RequestParam("image")String image) throws IOException {
-//        Product product = new Product();
-//        product.setId(product.getId());
-//        product.setName(product.getName());
-//        String imageUUID;
-//        if (!file.isEmpty()) {
-//            imageUUID = file.getOriginalFilename();
-//            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
-//            Files.write(fileNameAndPath, file.getBytes());
-//        } else {
-//            imageUUID = image;
-//        }
-//        product.setImage(imageUUID);
-//        product.setQuantity(product.getQuantity());
-//        product.setPrice(product.getPrice());
-//        product.setDescription(product.getDescription());
-//        System.out.println(product.getName());
-//        IProductService.save(product);
-//        return "index";
-//    }
-
     @PostMapping("/product")
-    public String AddProduct(@ModelAttribute Product product) {
+    public String saveProduct(@RequestParam("productImage")MultipartFile file,
+                              @RequestParam("image")String image,
+                              @RequestParam(required=true, name="name")String name,
+                              @RequestParam("description")String description,
+                              @RequestParam("price")float price,
+                              @RequestParam("quantity")int quantiy) throws IOException {
+        Product product = new Product();
+        String imageUUID;
+        if (!file.isEmpty()) {
+            imageUUID = file.getOriginalFilename();
+            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
+            Files.write(fileNameAndPath, file.getBytes());
+        } else {
+            imageUUID = image;
+        }
+        product.setImage(imageUUID);
+        product.setName(name);
+        product.setQuantity(quantiy);
+        product.setPrice(price);
+        product.setDescription(description);
         IProductService.save(product);
         return "redirect:/";
     }
+
+//    @PostMapping("/product")
+//    public String AddProduct(@ModelAttribute Product product) {
+//        IProductService.save(product);
+//        return "redirect:/";
+//    }
 }
