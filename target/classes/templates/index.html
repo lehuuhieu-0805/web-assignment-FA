@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+        <title>Products</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1 style="margin-top: 10px">List Product</h1>
+            <button type="button" class="btn btn-primary float-right" style="margin-bottom: 10px" data-toggle="modal" data-target="#addNew" >Add New</button>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Product Name</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="dto: ${list}">
+                        <th scope="row" th:text="${dtoStat.index + 1}"></th>
+                        <td th:text="${dto.name}" />
+                        <td><img width="150px" th:src="@{${'data:' + dto.contentType + ';base64,' + dto.image}}"></td>
+                        <td th:text="${dto.description}"/>
+                        <td th:text="${dto.price}"/>
+                        <td th:text="${dto.quantity}"/>
+                        <td>
+                            <input type="hidden" id="id" th:value="${dto.id}"/>
+                            <a th:href="@{/product/delete/{id}(id=${dto.id})}" class="btn btn-danger">Delete</a>
+                            <a class="btn btn-info update" data-toggle="modal" data-target="#update">Update</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="addNew" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Add Product</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form th:action="@{/product}" th:object="${product}" method="POST" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Product Name:</label>
+                                                <input type="text" class="form-control" th:field="*{name}" id="name" name="name"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-form-label">Image:</label>
+                                                <br>
+                                                <input type="file" name="productImage" accept="image/jpeg, image/png"  id="productImage" />
+                                                <input type="hidden" name="image" th:value="${product.image}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-form-label">Description:</label>
+                                                <input type="text" class="form-control" th:field="*{description}" id="description" name="description"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-form-label">Price:</label>
+                                                <input type="text" class="form-control" th:field="*{price}" id="price" name="price"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-form-label">Quantity:</label>
+                                                <input type="text" class="form-control" th:field="*{quantity}" id="quantity" name="quantity"/>
+                                            </div>
+
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-success" value="Submit" style="width: 100%"/>
+                                    </div>
+                                </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" >Update Product</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/product/update}" th:object="${product}" method="POST" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-form-label">Product Name:</label>
+                                <input type="text" class="form-control" th:field="*{name}" id="name" name="name"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Image:</label>
+                                <br>
+                                <input type="file" name="productImage" accept="image/jpeg, image/png"  id="productImage" />
+                                <input type="hidden" id="image" name="image" th:value="${image}">
+                                <img style="margin-top: 10px" src="" id="hinhanh" width="450px">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Description:</label>
+                                <input type="text" class="form-control" th:field="*{description}" id="description" name="description"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Price:</label>
+                                <input type="text" class="form-control" th:field="*{price}" id="price" name="price"/>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-form-label">Quantity:</label>
+                                <input type="text" class="form-control" th:field="*{quantity}" id="quantity" name="quantity"/>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" th:field="*{id}" id="id" name="id"/>
+                            <input type="submit" class="btn btn-success" value="Submit" style="width: 100%"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('table .update').on('click', function () {
+                    var id = $(this).parent().find('#id').val();
+                    $.ajax({
+                        type: 'GET',
+                        url: '/product/update/' + id,
+                        success: function (product) {
+                            $("#update #id").val(product.id);
+                            $('#update #name').val(product.name);
+                            $('#update #image').val(product.image);
+                            document.querySelector('#hinhanh').src = 'data:' + product.contentType + ';base64,' + product.image;
+                            $('#update #description').val(product.description);
+                            $('#update #price').val(product.price);
+                            $('#update #quantity').val(product.quantity);
+                        }
+                    });
+                });
+            })
+        </script>
+    </body>
+
+</html>
