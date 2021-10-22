@@ -28,13 +28,14 @@
                     <tr th:each="dto: ${list}">
                         <th scope="row" th:text="${dtoStat.index + 1}"></th>
                         <td th:text="${dto.name}" />
-                        <td><img height="100px" width="100px"  th:src="@{${'/img/' + dto.image}}"></td>
+                        <td><img width="150px" th:src="@{${'/img/' + dto.image}}"></td>
                         <td th:text="${dto.description}"/>
                         <td th:text="${dto.price}"/>
                         <td th:text="${dto.quantity}"/>
                         <td>
+                            <input type="hidden" id="id" th:value="${dto.id}"/>
                             <a th:href="@{/product/delete/{id}(id=${dto.id})}" class="btn btn-danger">Delete</a>
-                            <a th:href="@{/product/update/{id}(id=${dto.id})}" class="btn btn-info" data-toggle="modal" data-target="#update">Update</a>
+                            <a class="btn btn-info update" data-toggle="modal" data-target="#update">Update</a>
                         </td>
                     </tr>
                 </tbody>
@@ -94,7 +95,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form th:action="@{/product}" th:object="${productDTO}" method="POST" enctype="multipart/form-data">
+                    <form th:action="@{/product/update}" th:object="${product}" method="POST" enctype="multipart/form-data">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label class="col-form-label">Product Name:</label>
@@ -104,7 +105,8 @@
                                 <label class="col-form-label">Image:</label>
                                 <br>
                                 <input type="file" name="productImage" accept="image/jpeg, image/png"  id="productImage" />
-                                <input type="hidden" name="image" th:value="${productDTO.image}">
+                                <input type="hidden" id="image" name="image" th:value="${image}">
+                                <img style="margin-top: 10px" src="" id="hinhanh" width="450px">
                             </div>
                             <div class="form-group">
                                 <label class="col-form-label">Description:</label>
@@ -121,6 +123,7 @@
 
                         </div>
                         <div class="modal-footer">
+                            <input type="hidden" th:field="*{id}" id="id" name="id"/>
                             <input type="submit" class="btn btn-success" value="Submit" style="width: 100%"/>
                         </div>
                     </form>
@@ -129,7 +132,28 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('table .update').on('click', function () {
+                    var id = $(this).parent().find('#id').val();
+                    $.ajax({
+                        type: 'GET',
+                        url: '/product/update/' + id,
+                        success: function (product) {
+                            $("#update #id").val(product.id);
+                            $('#update #name').val(product.name);
+                            $('#update #image').val(product.image);
+                            document.querySelector('#hinhanh').src = '/img/' + product.image;
+                            $('#update #description').val(product.description);
+                            $('#update #price').val(product.price);
+                            $('#update #quantity').val(product.quantity);
+                        }
+                    });
+                });
+            })
+        </script>
     </body>
 
 </html>

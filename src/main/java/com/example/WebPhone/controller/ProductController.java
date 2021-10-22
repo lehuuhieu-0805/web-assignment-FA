@@ -1,6 +1,5 @@
 package com.example.WebPhone.controller;
 
-import com.example.WebPhone.dto.ProductDTO;
 import com.example.WebPhone.entity.Product;
 import com.example.WebPhone.service.IProductService;
 import com.example.WebPhone.service.ProductServiceImpl;
@@ -31,13 +30,12 @@ public class ProductController {
         List<Product> listProduct = IProductService.findAll();
         model.addAttribute("list", listProduct);
         model.addAttribute("product", new Product());
-        model.addAttribute("productDTO", new ProductDTO());
         return "index";
     }
 
     @PostMapping("/product")
     public String saveProduct(@RequestParam("productImage")MultipartFile file,
-                              @ModelAttribute("productDTO")ProductDTO productDTO,
+                              @ModelAttribute("productDTO")Product productDTO,
                               @RequestParam("image")String image,
                               @RequestParam("name")String name,
                               @RequestParam("description")String description,
@@ -65,16 +63,33 @@ public class ProductController {
         IProductService.remove(id);
         return "redirect:/";
     }
-    @GetMapping("/product/update/{id}")
-    public String updateProduct(@PathVariable int id, Model model){
+
+    @PostMapping("/product/update")
+    public String updateProduct(@RequestParam("productImage")MultipartFile file,
+                                @ModelAttribute("product")Product newProduct,
+                                @RequestParam("id") int id,
+                                @RequestParam("image")String image,
+                                @RequestParam("name")String name,
+                                @RequestParam("description")String description,
+                                @RequestParam("price")float price,
+                                @RequestParam("quantity")int quantiy) throws IOException {
         Product product = IProductService.getProductById(id).get();
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setName(product.getName());
-        productDTO.setPrice(product.getPrice());
-        productDTO.setDescription(product.getDescription());
-        productDTO.setImage(product.getImage());
-        model.addAttribute("productDTO", productDTO);
+        System.out.println(image);
+        System.out.println(newProduct);
+        String imageUUID;
+        if (!file.isEmpty()) {
+            imageUUID = file.getOriginalFilename();
+            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
+            Files.write(fileNameAndPath, file.getBytes());
+        } else {
+            imageUUID = image;
+        }
+        product.setName(name);
+        product.setImage(imageUUID);
+        product.setDescription(description);
+        product.setQuantity(quantiy);
+        product.setPrice(price);
+        IProductService.save(product);
         return "redirect:/";
     }
-
 }
