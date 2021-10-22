@@ -2,26 +2,19 @@ package com.example.WebPhone.controller;
 
 import com.example.WebPhone.entity.Product;
 import com.example.WebPhone.service.IProductService;
-import com.example.WebPhone.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 
 @Controller
 public class ProductController {
-    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
+
     @Autowired
     IProductService IProductService;
 
@@ -35,26 +28,12 @@ public class ProductController {
 
     @PostMapping("/product")
     public String saveProduct(@RequestParam("productImage")MultipartFile file,
-                              @ModelAttribute("productDTO")Product productDTO,
-                              @RequestParam("image")String image,
-                              @RequestParam("name")String name,
-                              @RequestParam("description")String description,
-                              @RequestParam("price")float price,
-                              @RequestParam("quantity")int quantiy) throws IOException {
-        Product product = new Product();
-        String imageUUID;
+                              @ModelAttribute("productDTO")Product product) throws IOException {
         if (!file.isEmpty()) {
-            imageUUID = file.getOriginalFilename();
-            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
-            Files.write(fileNameAndPath, file.getBytes());
-        } else {
-            imageUUID = image;
+            byte[] fileContent = Base64.getEncoder().encode(file.getBytes());
+            product.setImage(new String(fileContent));
+            product.setContentType(file.getContentType());
         }
-        product.setImage(imageUUID);
-        product.setName(name);
-        product.setQuantity(quantiy);
-        product.setPrice(price);
-        product.setDescription(description);
         IProductService.save(product);
         return "redirect:/";
     }
@@ -66,29 +45,17 @@ public class ProductController {
 
     @PostMapping("/product/update")
     public String updateProduct(@RequestParam("productImage")MultipartFile file,
-                                @ModelAttribute("product")Product newProduct,
-                                @RequestParam("id") int id,
-                                @RequestParam("image")String image,
-                                @RequestParam("name")String name,
-                                @RequestParam("description")String description,
-                                @RequestParam("price")float price,
-                                @RequestParam("quantity")int quantiy) throws IOException {
-        Product product = IProductService.getProductById(id).get();
-        System.out.println(image);
-        System.out.println(newProduct);
-        String imageUUID;
+                                @ModelAttribute("product")Product newProduct) throws IOException {
+        Product product = IProductService.getProductById(newProduct.getId()).get();
         if (!file.isEmpty()) {
-            imageUUID = file.getOriginalFilename();
-            Path fileNameAndPath = Paths.get(uploadDir, imageUUID);
-            Files.write(fileNameAndPath, file.getBytes());
-        } else {
-            imageUUID = image;
+            byte[] fileContent = Base64.getEncoder().encode(file.getBytes());
+            product.setImage(new String(fileContent));
+            product.setContentType(file.getContentType());
         }
-        product.setName(name);
-        product.setImage(imageUUID);
-        product.setDescription(description);
-        product.setQuantity(quantiy);
-        product.setPrice(price);
+        product.setName(newProduct.getName());
+        product.setDescription(newProduct.getDescription());
+        product.setQuantity(newProduct.getQuantity());
+        product.setPrice(newProduct.getPrice());
         IProductService.save(product);
         return "redirect:/";
     }

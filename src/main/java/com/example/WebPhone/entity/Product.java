@@ -10,6 +10,7 @@ public class Product {
     private int id;
     private String name;
     private String image;
+    private String contentType;
     private int quantity;
     private float price;
     private String description;
@@ -18,10 +19,11 @@ public class Product {
 
     }
 
-    public Product(int id, String name, String image, int quantity, float price, String description) {
+    public Product(int id, String name, String image, String contentType, int quantity, float price, String description) {
         this.id = id;
         this.name = name;
         this.image = image;
+        this.contentType = contentType;
         this.quantity = quantity;
         this.price = price;
         this.description = description;
@@ -51,6 +53,14 @@ public class Product {
         this.image = image;
     }
 
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -73,17 +83,5 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", image='" + image + '\'' +
-                ", quantity=" + quantity +
-                ", price=" + price +
-                ", description='" + description + '\'' +
-                '}';
     }
 }

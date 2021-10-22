@@ -28,7 +28,7 @@
                     <tr th:each="dto: ${list}">
                         <th scope="row" th:text="${dtoStat.index + 1}"></th>
                         <td th:text="${dto.name}" />
-                        <td><img width="150px" th:src="@{${'/img/' + dto.image}}"></td>
+                        <td><img width="150px" th:src="@{${'data:' + dto.contentType + ';base64,' + dto.image}}"></td>
                         <td th:text="${dto.description}"/>
                         <td th:text="${dto.price}"/>
                         <td th:text="${dto.quantity}"/>
@@ -145,7 +145,7 @@
                             $("#update #id").val(product.id);
                             $('#update #name').val(product.name);
                             $('#update #image').val(product.image);
-                            document.querySelector('#hinhanh').src = '/img/' + product.image;
+                            document.querySelector('#hinhanh').src = 'data:' + product.contentType + ';base64,' + product.image;
                             $('#update #description').val(product.description);
                             $('#update #price').val(product.price);
                             $('#update #quantity').val(product.quantity);
