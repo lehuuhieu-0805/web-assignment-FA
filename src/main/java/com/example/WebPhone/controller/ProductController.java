@@ -1,5 +1,6 @@
 package com.example.WebPhone.controller;
 
+import com.example.WebPhone.dto.ProductDTO;
 import com.example.WebPhone.entity.Product;
 import com.example.WebPhone.service.IProductService;
 import com.example.WebPhone.service.ProductServiceImpl;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Controller
 public class ProductController {
-    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/img";
+    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
     @Autowired
     IProductService IProductService;
 
@@ -30,13 +31,15 @@ public class ProductController {
         List<Product> listProduct = IProductService.findAll();
         model.addAttribute("list", listProduct);
         model.addAttribute("product", new Product());
+        model.addAttribute("productDTO", new ProductDTO());
         return "index";
     }
 
     @PostMapping("/product")
     public String saveProduct(@RequestParam("productImage")MultipartFile file,
+                              @ModelAttribute("productDTO")ProductDTO productDTO,
                               @RequestParam("image")String image,
-                              @RequestParam(required=true, name="name")String name,
+                              @RequestParam("name")String name,
                               @RequestParam("description")String description,
                               @RequestParam("price")float price,
                               @RequestParam("quantity")int quantiy) throws IOException {
@@ -60,6 +63,17 @@ public class ProductController {
     @GetMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable int id){
         IProductService.remove(id);
+        return "redirect:/";
+    }
+    @GetMapping("/product/update/{id}")
+    public String updateProduct(@PathVariable int id, Model model){
+        Product product = IProductService.getProductById(id).get();
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setName(product.getName());
+        productDTO.setPrice(product.getPrice());
+        productDTO.setDescription(product.getDescription());
+        productDTO.setImage(product.getImage());
+        model.addAttribute("productDTO", productDTO);
         return "redirect:/";
     }
 
