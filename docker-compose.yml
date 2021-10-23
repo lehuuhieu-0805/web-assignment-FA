@@ -2,8 +2,6 @@ version: '1.0'
 services:
   app:
     container_name: app
-    build:
-      dockerfile: Dockerfile
-    image: app:latest
+    image: lehuuhieu/web-assignment-fa:v1.0
     ports:
     - 1234:8080
