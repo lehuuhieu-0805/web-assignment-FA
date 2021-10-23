@@ -1,0 +1,9 @@
+version: '1.0'
+services:
+  app:
+    container_name: app
+    build:
+      dockerfile: Dockerfile
+    image: app:latest
+    ports:
+    - 1234:8080
